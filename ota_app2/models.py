@@ -46,22 +46,30 @@ class Rateplan(models.Model):
     cancellation = models.ForeignKey(Cancellation, on_delete=models.CASCADE, related_name='clx')
     # check cascade here
 
+    def __str__(self):
+        return f'{self.name}  ({str(self.id)}) - {self.room.hotel.name}'
+
 class Price(models.Model):
-    rateplan = models.ForeignKey(Rateplan, on_delete=models.CASCADE, related_name='prices')
     date = models.DateField(null=True)
     availability = models.SmallIntegerField()
+    rateplan = models.ForeignKey(Rateplan, on_delete=models.CASCADE, related_name='prices')
     price_1 = models.DecimalField(max_digits=8, decimal_places=2)
-    price_2 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_3 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_4 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_5 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_6 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_7 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_8 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_9 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_10 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_11 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    price_12 = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    price_2 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_3 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_4 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_5 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_6 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_7 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_8 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_9 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_10 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_11 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_12 = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 
-class Availablity(models.Model):
-    pass
+    class Meta():
+        unique_together = ['date', 'rateplan']
+        # order_with_respect_to = 'rateplan'
+
+    def __str__(self):
+        return f'{self.date} - {self.availability} - {self.rateplan.name}'
+

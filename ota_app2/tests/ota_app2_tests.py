@@ -26,16 +26,37 @@ def test_room_list_response(client, room):
 @pytest.mark.django_db
 def test_hotel_list_response_filter_by_name_correct(client, hotel):
     response = client.get('/api/hotels/?name__contains=Hi')
-    print(response.content)
     assert len(response.json()) == 1
 
 @pytest.mark.django_db
 def test_hotel_list_response_filter_by_name_incorrect(client, hotel):
     response = client.get('/api/hotels/?name__contains=wa')
-    print(response.content)
     assert len(response.json()) == 0
 
+@pytest.mark.django_db
+def test_hotel_list_response_filter_by_city_correct(client, hotel):
+    response = client.get('/api/hotels/?city__contains=Wa')
+    assert len(response.json()) == 1
 
+@pytest.mark.django_db
+def test_hotel_list_response_filter_by_city_incorrect(client, hotel):
+    response = client.get('/api/hotels/?city__contains=asda')
+    assert len(response.json()) == 0
 
+@pytest.mark.django_db
+def test_hotel_list_response_filter_by_room_adult_occ_correct(client, hotel, room):
+    hotel.rooms.add(room)
+    response = client.get('/api/hotels/?rooms__occ_adult__gte=1')
+    assert len(response.json()) == 1
 
+@pytest.mark.django_db
+def test_hotel_list_response_filter_by_room_adult_occ_incorrect(client, hotel):
+    response = client.get('/api/hotels/?rooms__occ_adult__gte=12')
+    assert len(response.json()) == 0
+
+@pytest.mark.django_db
+def test_rateplan_list_response_correct(client, rateplan):
+    response = client.get('/api/rateplans/')
+    print(response.content)
+    assert len(response.json()) == 1
 
